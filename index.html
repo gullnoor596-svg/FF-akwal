@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-
-/* ===== THEME ===== */
 :root{
   --bg:#0f172a;
   --card:rgba(255,255,255,0.06);
@@ -32,20 +30,15 @@ body{
   color:var(--text);
 }
 
-/* TITLE */
 .title{
-  position:absolute;
-  left:50%;
-  top:10px;
-  transform:translateX(-50%);
-  font-size:32px;
+  text-align:center;
+  font-size:28px;
   font-weight:900;
-
+  padding:15px;
   background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet,red);
   background-size:300%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-
   animation:move 4s linear infinite;
 }
 
@@ -54,26 +47,9 @@ body{
   100%{background-position:300%;}
 }
 
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 15px;
-}
-
-#menuBtn{
-  font-size:25px;
-  background:none;
-  border:none;
-  color:var(--green);
-  cursor:pointer;
-}
-
-/* SEARCH */
 #search{
-  width:75%;
-  margin:55px auto;
+  width:80%;
+  margin:10px auto;
   padding:12px;
   border-radius:10px;
   border:none;
@@ -82,7 +58,6 @@ body{
   font-weight:800;
 }
 
-/* CARD */
 .card{
   margin:15px;
   padding:15px;
@@ -98,7 +73,6 @@ body{
   line-height:2;
 }
 
-/* ACTION */
 .actionBox{
   position:absolute;
   top:10px;
@@ -115,98 +89,6 @@ body{
   color:var(--text);
 }
 
-/* HEART */
-.like i{
-  color:transparent;
-  -webkit-text-stroke:1.6px var(--text);
-}
-
-.like.liked i{
-  color:red;
-  -webkit-text-stroke:0;
-}
-
-/* DRAWER */
-.drawer{
-  position:fixed;
-  top:0;
-  right:0;
-  width:150px;
-  height:75%;
-  background:#111827;
-  border-radius:35px 0 0 35px;
-  transform:translateX(100%);
-  transition:0.35s;
-  padding-top:60px;
-  z-index:999;
-}
-
-.drawer.open{
-  transform:translateX(0);
-}
-
-#overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:none;
-}
-
-#overlay.show{
-  display:block;
-}
-
-/* CLOSE */
-#closeBtn{
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:none;
-  border:none;
-  color:var(--green);
-  font-size:22px;
-  cursor:pointer;
-}
-
-/* MENU */
-.menuItem{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  color:var(--green);
-  cursor:pointer;
-  text-decoration:none;
-}
-
-/* CATEGORY */
-.categoryBox{
-  display:none;
-  padding-right:10px;
-}
-
-.categoryBox.show{
-  display:block;
-}
-
-.categoryItem{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px;
-  color:var(--green);
-  text-decoration:none;
-  border-right:3px solid var(--green);
-  margin:6px 0;
-  font-size:14px;
-}
-
-.categoryItem:hover{
-  background:rgba(34,197,94,0.1);
-  transform:translateX(-3px);
-}
-
-/* LOAD */
 #loadMore{
   margin:20px auto;
   display:block;
@@ -217,26 +99,12 @@ body{
   color:#000;
   font-weight:800;
 }
-
-/* ICON */
-.icon-spin{
-  animation:spin 0.4s linear;
-}
-
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <button id="menuBtn" onclick="openDrawer()">☰</button>
-  <div class="title">فری فائر اقوال</div>
-</div>
+<div class="title">فری فائر اقوال</div>
 
 <input id="search" placeholder="اقوال تلاش کریں..." oninput="searchQuotes()">
 
@@ -244,69 +112,13 @@ body{
 
 <button id="loadMore" onclick="loadMore()">مزید لوڈ کریں</button>
 
-<div id="overlay" onclick="closeDrawer()"></div>
-
-<!-- DRAWER -->
-<div class="drawer" id="drawer">
-
-<button id="closeBtn" onclick="closeDrawer()">✖</button>
-
-<!-- ✅ HELP US BUTTON ADDED -->
-<div class="menuItem">
-  <a href="https://your-link.com" target="_blank" rel="noopener noreferrer"
-     style="text-decoration:none; color:inherit;">
-    <i class="fas fa-hand-holding-heart" style="color:#22c55e;"></i>
-    ہماری مدد کریں
-  </a>
-</div>
-
-<div class="menuItem" onclick="showAll()">
-<i class="fas fa-list"></i> تمام اقوال
-</div>
-
-<div class="menuItem" onclick="showFavs()">
-<i class="fas fa-heart"></i> فیورٹس
-</div>
-
-<div class="menuItem" onclick="toggleTheme()">
-<i id="themeIcon" class="fas fa-moon"></i> نائٹ موڈ
-</div>
-
-<div class="menuItem" onclick="toggleCategories()">
-<i class="fas fa-layer-group"></i> اقسام
-</div>
-
-<!-- OLD CATEGORIES -->
-<div class="categoryBox" id="categoryBox">
-
-<a class="categoryItem" href="https://example.com/urdu">
-<i class="fas fa-book" style="color:#22c55e;"></i> فری فائر اقوال
-</a>
-
-<a class="categoryItem" href="https://example.com/islamic">
-<i class="fas fa-mosque" style="color:#22c55e;"></i> اسلامی اقوال
-</a>
-
-<a class="categoryItem" href="https://example.com/pashto">
-<i class="fas fa-mountain" style="color:#22c55e;"></i> پشتو اقوال
-</a>
-
-</div>
-
-</div>
-
 <script>
-
-/* THEME SAVE */
-if(localStorage.getItem("theme")==="light"){
-document.body.classList.add("light");
-}
 
 /* DATA */
 const customQuotes = [
 
-  {id:1, show:"نشانہ میرا پرفیکٹ انجام دشمن کا فکس", copy:"ﺲﻜﻓ ﺎﻛ ﻦﻤﺷﺩ ﻡﺎﺠﻧﺍ ﭧﻜﻴﻓﺮﭘ ﺍﺮﻴﻣ ﮧﻧﺎﺸﻧ"},
-  {id:2, show:"میری انٹری ہی کافی ہے گیم پلٹ جاتی ہے", copy:"ﮯﮨ ﻰﺗﺎﺟ ﭧﻠﭘ ﻢﻴﮔ ﮯﮨ ﻰﻓﺍک ﻰﮨ ﻯﺮﭩﻧﺍ یﺮﻴﻣ"},
+{id:1, show:"نشانہ میرا پرفیکٹ انجام دشمن کا فکس", copy:"ﺲﻜﻓ ﺎﻛ ﻦﻤﺷﺩ ﻡﺎﺠﻧﺍ ﭧﻜﻴﻓﺮﭘ ﺍﺮﻴﻣ ﮧﻧﺎﺸﻧ"},
+{id:2, show:"میری انٹری ہی کافی ہے گیم پلٹ جاتی ہے", copy:"ﮯﮨ ﻰﺗﺎﺟ ﭧﻠﭘ ﻢﻴﮔ ﮯﮨ ﻰﻓﺍک ﻰﮨ ﻯﺮﭩﻧﺍ یﺮﻴﻣ"},
 {id:3, show:"نام سنبھل کر لینا فری فائر میں مشہور ہے", copy:"ﮯﮨ ﺭﻮﮩﺸﻣ ںﻴﻣ ﺮﺋﺎﻓ ﻯﺮﻓ ﺎﻨﻴﻟ ﺮﻛ ﻞﻬﺒﻨﺳ ﻡﺎﻧ"},
 {id:4, show:"گیم آن ہوتے ہی دشمن آف ہو جاتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﺟ ﻮﮨ ﻑﺁ ﻦﻤﺷﺩ ﻰﮨ ﮯﺗﻮﮨ ﻥﺁ ﻢﻴﮔ"},
 {id:5, show:"ہیڈ شاٹ میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﭦﺎﺷ ﮉﻴﮨ"},
@@ -347,123 +159,64 @@ const customQuotes = [
 {id:40, show:"سامنے آیا تو ختم", copy:"ﻢﺘﺧ ﻮﺗ ﺎﻳ ﮯﻨﻣﺎﺳ"},
 {id:41, show:"دل سے کھیلتے ہیں فری فائر جنون ہے", copy:"ﮯﮨ ﻥﻮﻨﺟ ﺮﺋﺎﻓ ﻯﺮﻓ ںﻴﮨ ﮯﺘﻠﻴﻬﻛ ﮯﺳ ﻝﺩ"},
 {id:42, show:"ہار بھی سبق ہے", copy:"ﮯﮨ ﻖﺒﺳ ﻰﻬﺑ ﺭﺎﮨ"},
-{id:43, show:" ", copy:" "},
-{id:44, show:" ", copy:" "},
-{id:45, show:" ", copy:" "},
-{id:46, show:" ", copy:" "},
-{id:47, show:" ", copy:" "},
-{id:48, show:" ", copy:" "},
-{id:49, show:" ", copy:" "},
-{id:50, show:" ", copy:" "},
 ];
 
-const autoQuotes=Array.from({length:600},(_,i)=>({
+const autoQuotes = Array.from({length:200},(_,i)=>({
 id:i+100,
-category:i%3===0?"urdu":i%3===1?"pashto":"islamic",
 show:"یہ قول نمبر "+(i+1),
 copy:"text "+(i+1)
 }));
 
-const quotes=[...customQuotes,...autoQuotes];
+const quotes = [...customQuotes,...autoQuotes];
 
-let favorites=JSON.parse(localStorage.getItem("favs"))||[];
-let filtered=[...quotes];
-let page=1;
-let limit=20;
-
-/* DRAWER */
-function openDrawer(){
-drawer.classList.add("open");
-overlay.classList.add("show");
-}
-
-function closeDrawer(){
-drawer.classList.remove("open");
-overlay.classList.remove("show");
-}
-
-/* CATEGORY */
-function toggleCategories(){
-document.getElementById("categoryBox").classList.toggle("show");
-}
-
-/* FILTER */
-function showAll(){
-filtered=[...quotes];
-page=1;
-render();
-closeDrawer();
-}
-
-function showFavs(){
-filtered=quotes.filter(q=>favorites.includes(q.id));
-page=1;
-render();
-closeDrawer();
-}
-
-/* LIKE */
-function toggleLike(id){
-if(favorites.includes(id)){
-favorites=favorites.filter(f=>f!==id);
-}else{
-favorites.push(id);
-}
-localStorage.setItem("site2_favs", JSON.stringify(favorites));
-render();
-}
+let filtered = [...quotes];
+let page = 1;
+let limit = 20;
 
 /* SEARCH */
 function searchQuotes(){
-let v=document.getElementById("search").value.toLowerCase();
-filtered=quotes.filter(q=>q.show.toLowerCase().includes(v));
-page=1;
+let v = document.getElementById("search").value.toLowerCase();
+filtered = quotes.filter(q => q.show.toLowerCase().includes(v));
+page = 1;
 render();
 }
 
-/* LOAD */
+/* LOAD MORE */
 function loadMore(){
 page++;
 render();
 }
 
-/* NIGHT MODE */
-function toggleTheme(){
-const icon=document.getElementById("themeIcon");
-
-icon.classList.add("icon-spin");
-setTimeout(()=>icon.classList.remove("icon-spin"),400);
-
-document.body.classList.toggle("light");
-
-if(document.body.classList.contains("light")){
-localStorage.setItem("theme","light");
-icon.classList.replace("fa-moon","fa-sun");
-}else{
-localStorage.setItem("theme","dark");
-icon.classList.replace("fa-sun","fa-moon");
+/* COPY */
+function copyText(text){
+navigator.clipboard.writeText(text);
 }
+
+/* SPEAK */
+function speakText(text){
+let msg = new SpeechSynthesisUtterance(text);
+msg.lang = "ur-PK";
+speechSynthesis.speak(msg);
 }
 
 /* RENDER */
 function render(){
-let c=document.getElementById("container");
-c.innerHTML="";
+let c = document.getElementById("container");
+c.innerHTML = "";
 
 filtered.slice(0,page*limit).forEach(q=>{
-let liked=favorites.includes(q.id);
 
-c.innerHTML+=`
+c.innerHTML += `
 <div class="card">
 
 <div class="actionBox">
 
-<button class="like ${liked?'liked':''}" onclick="toggleLike(${q.id})">
-<i class="fas fa-heart"></i>
+<button onclick="copyText('${q.copy}')">
+<i class="fas fa-copy"></i>
 </button>
 
-<button onclick="navigator.clipboard.writeText('${q.copy}')">
-<i class="fas fa-copy"></i>
+<button onclick="speakText('${q.show}')">
+<i class="fas fa-volume-up"></i>
 </button>
 
 </div>
