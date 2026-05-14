@@ -9,42 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-:root{
-  --bg:#0f172a;
-  --card:rgba(255,255,255,0.06);
-  --text:#fff;
-  --green:#22c55e;
-}
-
-body.light{
-  --bg:#f1f5f9;
-  --card:#fff;
-  --text:#111827;
-  --green:#16a34a;
-}
-
 body{
   margin:0;
   font-family:'Noto Nastaliq Urdu', serif;
-  background:var(--bg);
-  color:var(--text);
+  background:#0f172a;
+  color:#fff;
 }
 
 .title{
   text-align:center;
   font-size:28px;
-  font-weight:900;
   padding:15px;
-  background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet,red);
-  background-size:300%;
+  background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:move 4s linear infinite;
-}
-
-@keyframes move{
-  0%{background-position:0%;}
-  100%{background-position:300%;}
 }
 
 #search{
@@ -55,15 +33,13 @@ body{
   border:none;
   display:block;
   text-align:center;
-  font-weight:800;
 }
 
 .card{
   margin:15px;
   padding:15px;
   border-radius:15px;
-  background:var(--card);
-  border:1px solid rgba(34,197,94,0.3);
+  background:rgba(255,255,255,0.06);
   position:relative;
 }
 
@@ -78,15 +54,15 @@ body{
   top:10px;
   left:10px;
   display:flex;
-  gap:12px;
+  gap:10px;
 }
 
 .actionBox button{
   background:none;
   border:none;
   font-size:18px;
+  color:#fff;
   cursor:pointer;
-  color:var(--text);
 }
 
 #loadMore{
@@ -95,8 +71,7 @@ body{
   padding:10px 15px;
   border:none;
   border-radius:10px;
-  background:var(--green);
-  color:#000;
+  background:#22c55e;
   font-weight:800;
 }
 </style>
@@ -114,69 +89,44 @@ body{
 
 <script>
 
-/* DATA */
-const customQuotes = [
+/* 🔥 SETTINGS */
+const MIN_LENGTH = 10;
+const MAX_LENGTH = 80;
 
-{id:1, show:"نشانہ میرا پرفیکٹ انجام دشمن کا فکس", copy:"ﺲﻜﻓ ﺎﻛ ﻦﻤﺷﺩ ﻡﺎﺠﻧﺍ ﭧﻜﻴﻓﺮﭘ ﺍﺮﻴﻣ ﮧﻧﺎﺸﻧ"},
-{id:2, show:"میری انٹری ہی کافی ہے گیم پلٹ جاتی ہے", copy:"ﮯﮨ ﻰﺗﺎﺟ ﭧﻠﭘ ﻢﻴﮔ ﮯﮨ ﻰﻓﺍک ﻰﮨ ﻯﺮﭩﻧﺍ یﺮﻴﻣ"},
-{id:3, show:"نام سنبھل کر لینا فری فائر میں مشہور ہے", copy:"ﮯﮨ ﺭﻮﮩﺸﻣ ںﻴﻣ ﺮﺋﺎﻓ ﻯﺮﻓ ﺎﻨﻴﻟ ﺮﻛ ﻞﻬﺒﻨﺳ ﻡﺎﻧ"},
-{id:4, show:"گیم آن ہوتے ہی دشمن آف ہو جاتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﺟ ﻮﮨ ﻑﺁ ﻦﻤﺷﺩ ﻰﮨ ﮯﺗﻮﮨ ﻥﺁ ﻢﻴﮔ"},
-{id:5, show:"ہیڈ شاٹ میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﭦﺎﺷ ﮉﻴﮨ"},
-{id:6, show:"ہار ماننا میرے لغت میں نہیں", copy:"ںﻴﮩﻧ ںﻴﻣ ﺖﻐﻟ ﮮﺮﻴﻣ ﺎﻨﻧﺎﻣ ﺭﺎﮨ"},
-{id:7, show:"کھیلتا کم ہوں جتاتا زیادہ ہوں", copy:"ںﻮﮨ ﮦﺩﺎﻳﺯ ﺎﺗﺎﺘﺟ ںﻮﮨ ﻢﻛ ﺎﺘﻠﻴﻬﻛ"},
-{id:8, show:"فری فائر نہیں، فری خوف پھیلاتا ہوں", copy:"ںﻮﮨ ﺎﺗﻼﻴﻬﭘ ﻑﻮﺧ ﻯﺮﻓ ںﻴﮩﻧ ﺮﺋﺎﻓ ﻯﺮﻓ"},
-{id:9, show:"میرا اسٹائل ہی میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﻰﮨ ﻞﺋﺎﭩﺳﺍ ﺍﺮﻴﻣ"},
-{id:10, show:"اکیلا آیا تھا لیجنڈ بن گیا", copy:"ﺎﻴﮔ ﻦﺑ ﮉﻨﺠﻴﻟ ﺎﻬﺗ ﺎﻳﺁ ﻼﻴﻛﺍ"},
-{id:11, show:"ہم وہاں کھڑے ہوتے ہیں جہاں گیم ختم ہوتی ہے", copy:"ﮯﮨ ﻰﺗﻮﮨ ﻢﺘﺧ ﻢﻴﮔ ںﺎﮩﺟ ںﻴﮨ ﮯﺗﻮﮨ ﮮﮍﻬﻛ ںﺎﮨﻭ ﻢﮨ"},
-{id:12, show:"نام یاد رکھو باقی سب ہار جائیں گے", copy:"ﮯﮔ ںﻴﺋﺎﺟ ﺭﺎﮨ ﺐﺳ ﻰﻗﺎﺑ ﻮﻬﻛﺭ ﺩﺎﻳ ﻡﺎﻧ"},
-{id:13, show:"شوق نہیں عادت ہے جیتنا", copy:"ﺎﻨﺘﻴﺟ ﮯﮨ ﺕﺩﺎﻋ ںﻴﮩﻧ ﻕﻮﺷ"},
-{id:14, show:"اکیلا ہوں مگر خطرناک ہوں", copy:"ںﻮﮨ کﺎﻧﺮﻄﺧ ﺮﮕﻣ ںﻮﮨ ﻼﻴﻛﺍ"},
-{id:15, show:"ہم لیول نہیں، خوف بناتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﻨﺑ ﻑﻮﺧ ںﻴﮩﻧ ﻝﻮﻴﻟ ﻢﮨ"},
-{id:16, show:"ہم وہ ہیں جو نام سے ہی پہچانے جاتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﺟ ﮯﻧﺎﭽﮩﭘ ﻰﮨ ﮯﺳ ﻡﺎﻧ ﻮﺟ ںﻴﮨ ﮦﻭ ﻢﮨ"},
-{id:17, show:"خاموش رہتا ہوں، شور میرا گیم کرتا ہے", copy:"ﮯﮨ ﺎﺗﺮﻛ ﻢﻴﮔ ﺍﺮﻴﻣ ﺭﻮﺷ ںﻮﮨ ﺎﺘﮨﺭ ﺵﻮﻣﺎﺧ"},
-{id:18, show:"خاموش کھلاڑی ہوں لیکن خطرناک", copy:"کﺎﻧﺮﻄﺧ ﻦﻜﻴﻟ ںﻮﮨ ﻯﮌﻼﻬﻛ ﺵﻮﻣﺎﺧ"},
-{id:19, show:"دشمن نظر آئے تو گیم شروع ہوتی ہے", copy:"ﮯﮨ ﻰﺗﻮﮨ ﻉﻭﺮﺷ ﻢﻴﮔ ﻮﺗ ﮯﺋﺁ ﺮﻈﻧ ﻦﻤﺷﺩ"},
-{id:20, show:"میرا انداز ہی دشمنوں کے لیے کافی ہے", copy:"ﮯﮨ ﻰﻓﺎﻛ ﮯﻴﻟ ﮯﻛ ںﻮﻨﻤﺷﺩ ﻰﮨ ﺯﺍﺪﻧﺍ ﺍﺮﻴﻣ"},
-{id:21, show:"گیم میری، رول میرے", copy:"ﮮﺮﻴﻣ ﻝﻭﺭ ،ﻯﺮﻴﻣ ﻢﻴﮔ"},
-{id:22, show:"دشمن سوچتے رہ گئے، میں جیت گیا", copy:"ﺎﻴﮔ ﺖﻴﺟ ںﻴﻣ ،ﮯﺌﮔ ﮦﺭ ﮯﺘﭼﻮﺳ ﻦﻤﺷﺩ"},
-{id:23, show:"میرا رویہ ہی میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﻰﮨ ﮧﻳﻭﺭ ﺍﺮﻴﻣ"},
-{id:24, show:"ہماری انٹری، دشمنوں کی چھٹی", copy:"ﻰﭩﻬﭼ ﻰﻛ ںﻮﻨﻤﺷﺩ ،ﻯﺮﭩﻧﺍ ﻯﺭﺎﻤﮨ"},
-{id:25, show:"دشمنوں کے لیے وقت نہیں صرف انجام ہے", copy:"ﮯﮨ ﻡﺎﺠﻧﺍ ﻑﺮﺻ ںﻴﮩﻧ ﺖﻗﻭ ﮯﻴﻟ ﮯﻛ ںﻮﻨﻤﺷﺩ"},
-{id:26, show:"میرا اسٹائل کاپی نہیں ہوتا", copy:"ﺎﺗﻮﮨ ںﻴﮩﻧ ﻰﭘﺎﻛ ﻞﺋﺎﭩﺳﺍ ﺍﺮﻴﻣ"},
-{id:27, show:"نظر جھکا کے رکھو ہم سامنے ہیں", copy:"ںﻴﮨ ﮯﻨﻣﺎﺳ ﻢﮨ ﻮﻬﻛﺭ ﮯﻛ ﺎﻜﻬﺟ ﺮﻈﻧ"},
-{id:28, show:"جو سمجھا نہیں وہ ہارا", copy:"ﺍﺭﺎﮨ ﮦﻭ ںﻴﮩﻧ ﺎﻬﺠﻤﺳ ﻮﺟ"},
-{id:29, show:"جو میرے راستے میں آیا، وہ گیم سے گیا", copy:"ﺎﻴﮔ ﮯﺳ ﻢﻴﮔ ﮦﻭ ،ﺎﻳﺁ ںﻴﻣ ﮯﺘﺳﺍﺭ ﮮﺮﻴﻣ ﻮﺟ"},
-{id:30, show:"غ غبارے ف فوارے تم ہمارے  ہم تمہارے", copy:"ﮮﺭﺎﮩﻤﺗ ﻢﮨ  ﮮﺭﺎﻤﮨ ﻢﺗ ﮮﺭﺍﻮﻓ ﻑ ﮮﺭﺎﺒﻏ ﻍ"},
-{id:31, show:"فری فائر کا بادشاہ", copy:"ﮦﺎﺷﺩﺎﺑ ﺎﻛ ﺮﺋﺎﻓ ﻯﺮﻓ"},
-{id:32, show:"خاموشی میری طاقت", copy:"ﺖﻗﺎﻃ ﻯﺮﻴﻣ ﻰﺷﻮﻣﺎﺧ"},
-{id:33, show:"دشمن کا انجام", copy:"ﻡﺎﺠﻧﺍ ﺎﻛ ﻦﻤﺷﺩ"},
-{id:34, show:"نوابوں کی طرح کھیلتے ہیں", copy:"ںﻴﮨ ﮯﺘﻠﻴﻬﻛ ﺡﺮﻃ ﻰﻛ ںﻮﺑﺍﻮﻧ"},
-{id:35, show:"فری فائر ہماری پہچان", copy:"ﻥﺎﭽﮩﭘ ﻯﺭﺎﻤﮨ ﺮﺋﺎﻓ ﻯﺮﻓ"},
-{id:36, show:"دشمن صرف نمبر ہوتے ہیں", copy:"ںﻴﮨ ﮯﺗﻮﮨ ﺮﺒﻤﻧ ﻑﺮﺻ ﻦﻤﺷﺩ"},
-{id:37, show:"انداز اپنا اصول اپنے", copy:"ﮯﻨﭘﺍ ﻝﻮﺻﺍ ﺎﻨﭘﺍ ﺯﺍﺪﻧﺍ"},
-{id:38, show:"فری فائر میری دنیا", copy:"ﺎﻴﻧﺩ ﻯﺮﻴﻣ ﺮﺋﺎﻓ ﻯﺮﻓ"},
-{id:39, show:"لیول نہیں دم دیکھ کر بات کرو", copy:"ﻭﺮﻛ ﺕﺎﺑ ﺮﻛ ﻬﻜﻳﺩ ﻡﺩ ںﻴﮩﻧ ﻝﻮﻴﻟ"},
-{id:40, show:"سامنے آیا تو ختم", copy:"ﻢﺘﺧ ﻮﺗ ﺎﻳ ﮯﻨﻣﺎﺳ"},
-{id:41, show:"دل سے کھیلتے ہیں فری فائر جنون ہے", copy:"ﮯﮨ ﻥﻮﻨﺟ ﺮﺋﺎﻓ ﻯﺮﻓ ںﻴﮨ ﮯﺘﻠﻴﻬﻛ ﮯﺳ ﻝﺩ"},
-{id:42, show:"ہار بھی سبق ہے", copy:"ﮯﮨ ﻖﺒﺳ ﻰﻬﺑ ﺭﺎﮨ"},
+/* CUSTOM QUOTES */
+const customQuotes = [
+{id:1, show:"نشانہ میرا پرفیکٹ انجام دشمن کا فکس", copy:"text1"},
+{id:2, show:"میری انٹری ہی کافی ہے گیم پلٹ جاتی ہے", copy:"text2"},
+{id:3, show:"خاموشی میری طاقت ہے", copy:"text3"},
 ];
 
+/* AUTO QUOTES (200 + LENGTH FILTER) */
 const autoQuotes = Array.from({length:200},(_,i)=>({
 id:i+100,
 show:"یہ قول نمبر "+(i+1),
 copy:"text "+(i+1)
-}));
+})).filter(q =>
+    q.show.length >= MIN_LENGTH &&
+    q.show.length <= MAX_LENGTH
+);
 
-const quotes = [...customQuotes,...autoQuotes];
+/* MERGE */
+const quotes = [...customQuotes, ...autoQuotes];
 
 let filtered = [...quotes];
 let page = 1;
 let limit = 20;
 
-/* SEARCH */
+/* SEARCH + FILTER */
 function searchQuotes(){
 let v = document.getElementById("search").value.toLowerCase();
-filtered = quotes.filter(q => q.show.toLowerCase().includes(v));
+
+filtered = quotes.filter(q =>
+    q.show.toLowerCase().includes(v) &&
+    q.show.length >= MIN_LENGTH &&
+    q.show.length <= MAX_LENGTH
+);
+
 page = 1;
 render();
 }
@@ -192,11 +142,13 @@ function copyText(text){
 navigator.clipboard.writeText(text);
 }
 
-/* SPEAK */
+/* 🔊 SPEAK (ANDROID WEBVIEW ONLY) */
 function speakText(text){
-let msg = new SpeechSynthesisUtterance(text);
-msg.lang = "ur-PK";
-speechSynthesis.speak(msg);
+    if(window.Android && Android.speak){
+        Android.speak(text);
+    } else {
+        alert("Speak not supported in browser");
+    }
 }
 
 /* RENDER */
@@ -204,7 +156,7 @@ function render(){
 let c = document.getElementById("container");
 c.innerHTML = "";
 
-filtered.slice(0,page*limit).forEach(q=>{
+filtered.slice(0, page * limit).forEach(q=>{
 
 c.innerHTML += `
 <div class="card">
