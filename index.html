@@ -365,9 +365,8 @@ copy:"text "+(i+1)
 }));
 
 const quotes=[...customQuotes,...autoQuotes];
-const SITE_ID = "urdu_quotes";
 
-let favorites = JSON.parse(localStorage.getItem("favs_" + SITE_ID)) || [];
+let favorites=JSON.parse(localStorage.getItem("favs"))||[];
 let filtered=[...quotes];
 let page=1;
 let limit=20;
