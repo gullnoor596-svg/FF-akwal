@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>🔥 فری فائر اقوال</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
@@ -10,11 +11,11 @@
 
 <style>
 
-/* ===== BODY (FAST) ===== */
+/* ===== BODY ===== */
 body{
   margin:0;
   font-family:'Noto Nastaliq Urdu', serif;
-  background: #0f172a;
+  background:#0f172a;
   color:#fff;
 }
 
@@ -24,6 +25,7 @@ body{
   font-size:28px;
   margin:15px;
   font-weight:900;
+
   background:linear-gradient(90deg,#22c55e,#06b6d4,#f59e0b);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -34,23 +36,33 @@ body{
   width:85%;
   margin:10px auto 15px;
   display:block;
+
   padding:10px;
+
   border-radius:10px;
   border:none;
   outline:none;
+
   text-align:center;
+
   background:#1e293b;
   color:#fff;
 }
 
-/* ===== CARD (LIGHTWEIGHT) ===== */
+/* ===== CARD ===== */
 .card{
   margin:12px;
   padding:15px;
+
   border-radius:12px;
+
   background:#1e293b;
+
   border:1px solid rgba(255,255,255,0.08);
+
   transition:0.2s;
+
+  position:relative;
 }
 
 .card:hover{
@@ -71,15 +83,14 @@ body{
   top:10px;
 }
 
-.card{
-  position:relative;
-}
-
 .actionBox button{
   background:#0f172a;
   border:none;
+
   padding:7px 9px;
+
   border-radius:8px;
+
   color:#fff;
   cursor:pointer;
 }
@@ -92,11 +103,15 @@ body{
 #loadMore{
   margin:20px auto;
   display:block;
+
   padding:10px 15px;
+
   border:none;
   border-radius:10px;
+
   background:#22c55e;
   color:#000;
+
   font-weight:800;
 }
 
@@ -107,61 +122,183 @@ body{
 
 <div class="title">🔥 فری فائر اقوال</div>
 
-<input id="search" placeholder="اقوال تلاش کریں..." oninput="searchQuotes()">
+<input
+id="search"
+placeholder="اقوال تلاش کریں..."
+oninput="searchQuotes()"
+>
 
 <div id="container"></div>
 
-<button id="loadMore" onclick="loadMore()">مزید لوڈ کریں</button>
+<button id="loadMore" onclick="loadMore()">
+مزید لوڈ کریں
+</button>
 
 <script>
 
-const quotes = Array.from({length:120},(_,i)=>({
-id:i,
+/* DATA */
+const customQuotes = [
+
+{id:1, show:"نشانہ میرا پرفیکٹ انجام دشمن کا فکس", copy:"ﺲﻜﻓ ﺎﻛ ﻦﻤﺷﺩ ﻡﺎﺠﻧﺍ ﭧﻜﻴﻓﺮﭘ ﺍﺮﻴﻣ ﮧﻧﺎﺸﻧ"},
+{id:2, show:"میری انٹری ہی کافی ہے گیم پلٹ جاتی ہے", copy:"ﮯﮨ ﻰﺗﺎﺟ ﭧﻠﭘ ﻢﻴﮔ ﮯﮨ ﻰﻓﺍک ﻰﮨ ﻯﺮﭩﻧﺍ یﺮﻴﻣ"},
+{id:3, show:"نام سنبھل کر لینا فری فائر میں مشہور ہے", copy:"ﮯﮨ ﺭﻮﮩﺸﻣ ںﻴﻣ ﺮﺋﺎﻓ ﻯﺮﻓ ﺎﻨﻴﻟ ﺮﻛ ﻞﻬﺒﻨﺳ ﻡﺎﻧ"},
+{id:4, show:"گیم آن ہوتے ہی دشمن آف ہو جاتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﺟ ﻮﮨ ﻑﺁ ﻦﻤﺷﺩ ﻰﮨ ﮯﺗﻮﮨ ﻥﺁ ﻢﻴﮔ"},
+{id:5, show:"ہیڈ شاٹ میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﭦﺎﺷ ﮉﻴﮨ"},
+{id:6, show:"ہار ماننا میرے لغت میں نہیں", copy:"ںﻴﮩﻧ ںﻴﻣ ﺖﻐﻟ ﮮﺮﻴﻣ ﺎﻨﻧﺎﻣ ﺭﺎﮨ"},
+{id:7, show:"کھیلتا کم ہوں جتاتا زیادہ ہوں", copy:"ںﻮﮨ ﮦﺩﺎﻳﺯ ﺎﺗﺎﺘﺟ ںﻮﮨ ﻢﻛ ﺎﺘﻠﻴﻬﻛ"},
+{id:8, show:"فری فائر نہیں، فری خوف پھیلاتا ہوں", copy:"ںﻮﮨ ﺎﺗﻼﻴﻬﭘ ﻑﻮﺧ ﻯﺮﻓ ںﻴﮩﻧ ﺮﺋﺎﻓ ﻯﺮﻓ"},
+{id:9, show:"میرا اسٹائل ہی میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﻰﮨ ﻞﺋﺎﭩﺳﺍ ﺍﺮﻴﻣ"},
+{id:10, show:"اکیلا آیا تھا لیجنڈ بن گیا", copy:"ﺎﻴﮔ ﻦﺑ ﮉﻨﺠﻴﻟ ﺎﻬﺗ ﺎﻳﺁ ﻼﻴﻛﺍ"},
+{id:11, show:"ہم وہاں کھڑے ہوتے ہیں جہاں گیم ختم ہوتی ہے", copy:"ﮯﮨ ﻰﺗﻮﮨ ﻢﺘﺧ ﻢﻴﮔ ںﺎﮩﺟ ںﻴﮨ ﮯﺗﻮﮨ ﮮﮍﻬﻛ ںﺎﮨﻭ ﻢﮨ"},
+{id:12, show:"نام یاد رکھو باقی سب ہار جائیں گے", copy:"ﮯﮔ ںﻴﺋﺎﺟ ﺭﺎﮨ ﺐﺳ ﻰﻗﺎﺑ ﻮﻬﻛﺭ ﺩﺎﻳ ﻡﺎﻧ"},
+{id:13, show:"شوق نہیں عادت ہے جیتنا", copy:"ﺎﻨﺘﻴﺟ ﮯﮨ ﺕﺩﺎﻋ ںﻴﮩﻧ ﻕﻮﺷ"},
+{id:14, show:"اکیلا ہوں مگر خطرناک ہوں", copy:"ںﻮﮨ کﺎﻧﺮﻄﺧ ﺮﮕﻣ ںﻮﮨ ﻼﻴﻛﺍ"},
+{id:15, show:"ہم لیول نہیں، خوف بناتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﻨﺑ ﻑﻮﺧ ںﻴﮩﻧ ﻝﻮﻴﻟ ﻢﮨ"},
+{id:16, show:"ہم وہ ہیں جو نام سے ہی پہچانے جاتے ہیں", copy:"ںﻴﮨ ﮯﺗﺎﺟ ﮯﻧﺎﭽﮩﭘ ﻰﮨ ﮯﺳ ﻡﺎﻧ ﻮﺟ ںﻴﮨ ﮦﻭ ﻢﮨ"},
+{id:17, show:"خاموش رہتا ہوں، شور میرا گیم کرتا ہے", copy:"ﮯﮨ ﺎﺗﺮﻛ ﻢﻴﮔ ﺍﺮﻴﻣ ﺭﻮﺷ ںﻮﮨ ﺎﺘﮨﺭ ﺵﻮﻣﺎﺧ"},
+{id:18, show:"خاموش کھلاڑی ہوں لیکن خطرناک", copy:"کﺎﻧﺮﻄﺧ ﻦﻜﻴﻟ ںﻮﮨ ﻯﮌﻼﻬﻛ ﺵﻮﻣﺎﺧ"},
+{id:19, show:"دشمن نظر آئے تو گیم شروع ہوتی ہے", copy:"ﮯﮨ ﻰﺗﻮﮨ ﻉﻭﺮﺷ ﻢﻴﮔ ﻮﺗ ﮯﺋﺁ ﺮﻈﻧ ﻦﻤﺷﺩ"},
+{id:20, show:"میرا انداز ہی دشمنوں کے لیے کافی ہے", copy:"ﮯﮨ ﻰﻓﺎﻛ ﮯﻴﻟ ﮯﻛ ںﻮﻨﻤﺷﺩ ﻰﮨ ﺯﺍﺪﻧﺍ ﺍﺮﻴﻣ"},
+{id:21, show:"دشمن سوچتے رہ گئے، میں جیت گیا", copy:"ﺎﻴﮔ ﺖﻴﺟ ںﻴﻣ ،ﮯﺌﮔ ﮦﺭ ﮯﺘﭼﻮﺳ ﻦﻤﺷﺩ"},
+{id:22, show:"میرا رویہ ہی میری پہچان ہے", copy:"ﮯﮨ ﻥﺎﭽﮩﭘ یﺮﻴﻣ ﻰﮨ ﮧﻳﻭﺭ ﺍﺮﻴﻣ"},
+{id:23, show:"دشمنوں کے لیے وقت نہیں صرف انجام ہے", copy:"ﮯﮨ ﻡﺎﺠﻧﺍ ﻑﺮﺻ ںﻴﮩﻧ ﺖﻗﻭ ﮯﻴﻟ ﮯﻛ ںﻮﻨﻤﺷﺩ"},
+{id:24, show:"میرا اسٹائل کاپی نہیں ہوتا", copy:"ﺎﺗﻮﮨ ںﻴﮩﻧ ﻰﭘﺎﻛ ﻞﺋﺎﭩﺳﺍ ﺍﺮﻴﻣ"},
+{id:25, show:"نظر جھکا کے رکھو ہم سامنے ہیں", copy:"ںﻴﮨ ﮯﻨﻣﺎﺳ ﻢﮨ ﻮﻬﻛﺭ ﮯﻛ ﺎﻜﻬﺟ ﺮﻈﻧ"},
+{id:26, show:"جو سمجھا نہیں وہ ہارا", copy:"ﺍﺭﺎﮨ ﮦﻭ ںﻴﮩﻧ ﺎﻬﺠﻤﺳ ﻮﺟ"},
+{id:27, show:"جو میرے راستے میں آیا، وہ گیم سے گیا", copy:"ﺎﻴﮔ ﮯﺳ ﻢﻴﮔ ﮦﻭ ،ﺎﻳﺁ ںﻴﻣ ﮯﺘﺳﺍﺭ ﮮﺮﻴﻣ ﻮﺟ"},
+{id:28, show:"غ غبارے ف فوارے تم ہمارے  ہم تمہارے", copy:"ﮮﺭﺎﮩﻤﺗ ﻢﮨ  ﮮﺭﺎﻤﮨ ﻢﺗ ﮮﺭﺍﻮﻓ ﻑ ﮮﺭﺎﺒﻏ ﻍ"},
+{id:29, show:"فری فائر کا بادشاہ", copy:"ﮦﺎﺷﺩﺎﺑ ﺎﻛ ﺮﺋﺎﻓ ﻯﺮﻓ"},
+{id:30, show:"خاموشی میری طاقت", copy:"ﺖﻗﺎﻃ ﻯﺮﻴﻣ ﻰﺷﻮﻣﺎﺧ"},
+{id:31, show:"دشمن کا انجام", copy:"ﻡﺎﺠﻧﺍ ﺎﻛ ﻦﻤﺷﺩ"},
+{id:32, show:"نوابوں کی طرح کھیلتے ہیں", copy:"ںﻴﮨ ﮯﺘﻠﻴﻬﻛ ﺡﺮﻃ ﻰﻛ ںﻮﺑﺍﻮﻧ"},
+{id:33, show:"فری فائر ہماری پہچان", copy:"ﻥﺎﭽﮩﭘ ﻯﺭﺎﻤﮨ ﺮﺋﺎﻓ ﻯﺮﻓ"},
+{id:34, show:"دشمن صرف نمبر ہوتے ہیں", copy:"ںﻴﮨ ﮯﺗﻮﮨ ﺮﺒﻤﻧ ﻑﺮﺻ ﻦﻤﺷﺩ"},
+{id:35, show:"انداز اپنا اصول اپنے", copy:"ﮯﻨﭘﺍ ﻝﻮﺻﺍ ﺎﻨﭘﺍ ﺯﺍﺪﻧﺍ"},
+{id:36, show:"فری فائر میری دنیا", copy:"ﺎﻴﻧﺩ ﻯﺮﻴﻣ ﺮﺋﺎﻓ ﻯﺮﻓ"},
+{id:37, show:"لیول نہیں دم دیکھ کر بات کرو", copy:"ﻭﺮﻛ ﺕﺎﺑ ﺮﻛ ﻬﻜﻳﺩ ﻡﺩ ںﻴﮩﻧ ﻝﻮﻴﻟ"},
+{id:38, show:"سامنے آیا تو ختم", copy:"ﻢﺘﺧ ﻮﺗ ﺎﻳ ﮯﻨﻣﺎﺳ"},
+{id:39, show:"دل سے کھیلتے ہیں فری فائر جنون ہے", copy:"ﮯﮨ ﻥﻮﻨﺟ ﺮﺋﺎﻓ ﻯﺮﻓ ںﻴﮨ ﮯﺘﻠﻴﻬﻛ ﮯﺳ ﻝﺩ"},
+{id:40, show:"ہار بھی سبق ہے", copy:"ﮯﮨ ﻖﺒﺳ ﻰﻬﺑ ﺭﺎﮨ"},
+{id:41, show:" ", copy:" "},
+{id:42, show:" ", copy:" "},
+{id:43, show:" ", copy:" "},
+{id:44, show:" ", copy:" "},
+{id:45, show:" ", copy:" "},
+{id:46, show:" ", copy:" "},
+{id:47, show:" ", copy:" "},
+{id:48, show:" ", copy:" "},
+{id:49, show:" ", copy:" "},
+{id:50, show:" ", copy:" "},
+
+];
+
+/* =====================
+   AUTO DATA
+===================== */
+const autoQuotes = Array.from({length:600},(_,i)=>({
+
+id:i+100,
+
 show:"🔥 یہ قول نمبر "+(i+1),
-copy:"quote "+(i+1)
+
+copy:"text "+(i+1)
+
 }));
 
+/* =====================
+   ALL DATA
+===================== */
+const quotes = [...customQuotes,...autoQuotes];
+
 let filtered=[...quotes];
+
 let page=1;
-let limit=15;
 
-/* SEARCH */
+let limit=26;
+
+/* =====================
+   SEARCH
+===================== */
 function searchQuotes(){
-let v=document.getElementById("search").value.toLowerCase();
-filtered=quotes.filter(q=>q.show.toLowerCase().includes(v));
+
+let v=document
+.getElementById("search")
+.value
+.toLowerCase();
+
+filtered=quotes.filter(q=>
+q.show.toLowerCase().includes(v)
+);
+
 page=1;
+
 render();
+
 }
 
-/* LOAD MORE */
+/* =====================
+   LOAD MORE
+===================== */
 function loadMore(){
+
 page++;
+
 render();
+
 }
 
-/* RENDER (FAST) */
+/* =====================
+   RENDER
+===================== */
 function render(){
+
 let c=document.getElementById("container");
+
 c.innerHTML="";
 
 let end = page * limit;
 
 for(let i=0;i<end && i<filtered.length;i++){
+
 let q = filtered[i];
 
 c.innerHTML += `
+
 <div class="card">
 
 <div class="actionBox">
-<button onclick="navigator.clipboard.writeText('${q.copy}')">
+
+<button onclick="navigator.clipboard.writeText(\`${q.copy}\`)">
+
 <i class="fas fa-copy"></i>
+
 </button>
+
 </div>
 
-<div class="text">${q.show}</div>
+<div class="text">
 
-</div>`;
+${q.show}
+
+</div>
+
+</div>
+
+`;
+
 }
+
+/* LOAD BUTTON HIDE */
+if(end >= filtered.length){
+
+document.getElementById("loadMore").style.display="none";
+
+}else{
+
+document.getElementById("loadMore").style.display="block";
+
+}
+
 }
 
 render();
